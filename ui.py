@@ -165,7 +165,7 @@ class HangmanGame:
         self.root.resizable(False, False)
 
         # Create canvas for sky animation
-        self.canvas = tk.Canvas(root, width=600, height=800, bg="#87CEEB", highlightthickness=0)  # Sky blue color
+        self.canvas = tk.Canvas(root, width=600, height=800, bg="#87ceeb", highlightthickness=0)  # Sky blue color
         self.canvas.pack(fill="both", expand=True)
 
         # Create clouds
