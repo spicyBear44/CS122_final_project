@@ -2,13 +2,15 @@ import tkinter as tk
 from PIL import Image, ImageTk
 from tkinter import messagebox
 import random
-
+from trivia_hangman import TriviaHangman
 
 class GameScreen:
     def __init__(self, root):
         self.root = root
         self.root.geometry("800x800")
         self.root.resizable(False, False)
+
+        self.game = TriviaHangman()
 
         self.canvas = tk.Canvas(self.root, width=800, height=800, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
@@ -108,22 +110,15 @@ class GameScreen:
                 btn.grid(row=i, column=j, padx=2, pady=2)
 
     def select_topic(self, topic):
-        try:
-            with open(f"{topic}.txt", "r") as f:
-                questions = f.read().splitlines()
-                if questions:
-                    question_data = random.choice(questions).split("|")
-                    self.current_question = question_data[0]
-                    self.current_answer = question_data[1].upper()
-                    self.current_hint = question_data[2] if len(question_data) > 2 else ""
+        content = self.game.load_question(topic.lower())
+        self.current_question = content['question']
+        self.current_answer = content['answer'].upper()
+        self.current_hint = content['hint']
 
-                    self.question_label.config(text=self.current_question)
-                    self.reset_game_state()
-                    self.input_var.set("")
-                    self.game_elements_visible = True
-                    self.update_game_visibility()
-        except FileNotFoundError:
-            messagebox.showerror("Error", f"Could not load {topic} questions")
+        self.question_label.config(text=self.current_question)
+        self.input_var.set("")
+        self.game_elements_visible = True
+        self.update_game_visibility()
 
     def update_game_visibility(self):
         state = 'normal' if self.game_elements_visible else 'hidden'
@@ -167,13 +162,12 @@ class GameScreen:
 
     def show_instructions(self, event=None):
         messagebox.showinfo("Instructions", """HOW TO PLAY:
-
-• You have 3 tries to guess the hidden word.
-• Each wrong guess costs a life.
-• After 3 misses, it's game over!
-
-Type your guess, hit Submit, and good luck!
-""")
+            • You have 3 tries to guess the hidden word.
+            • Each wrong guess costs a life.
+            • After 3 misses, it's game over!
+            
+            Type your guess, hit Submit, and good luck!
+            """)
 
     def key_pressed(self, key):
         self.input_var.set(self.input_var.get() + key)
@@ -189,7 +183,7 @@ Type your guess, hit Submit, and good luck!
         if guess == self.current_answer:
             messagebox.showinfo("Congratulations!", "You guessed correctly!")
             self.canvas.itemconfig(self.word_display, text=self.current_answer)
-            self.game_elements_visible = False
+            self.reset_game_state()
             self.update_game_visibility()
         else:
             self.tries_remaining -= 1
