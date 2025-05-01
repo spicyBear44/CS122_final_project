@@ -4,6 +4,7 @@ from tkinter import messagebox
 import random
 from trivia_hangman import TriviaHangman
 
+
 class GameScreen:
     def __init__(self, root):
         self.root = root
@@ -103,7 +104,7 @@ class GameScreen:
             ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
             ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
             ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';'],
-            ['Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.','/']
+            ['Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/']
         ]
 
         for i, row in enumerate(keyboard_layout):
@@ -112,14 +113,15 @@ class GameScreen:
                 btn = tk.Button(self.keyboard_frame, text=key, font=("Comic Sans MS", 12, "bold"),
                                 width=4, height=2, relief="flat", bg="#5c5c5c", fg="black", activebackground="#87CEEB",
                                 activeforeground="black", bd=0, highlightthickness=0,
-                                command=lambda k=key: self.key_pressed(k) if k != 'delete' else self.backspace_pressed())
+                                command=lambda k=key: self.key_pressed(
+                                    k) if k != 'delete' else self.backspace_pressed())
                 btn.grid(row=i, column=j, padx=5, pady=5, sticky="nsew")
-
 
                 self.keyboard_frame.grid_rowconfigure(i, weight=1)
                 self.keyboard_frame.grid_columnconfigure(j, weight=1)
 
-        backspace_btn = tk.Button(self.keyboard_frame, text="delete", font=("Comic Sans MS", 12, "bold"), width=5, height=2,
+        backspace_btn = tk.Button(self.keyboard_frame, text="delete", font=("Comic Sans MS", 12, "bold"), width=5,
+                                  height=2,
                                   relief="flat", bg="white", fg="black", activebackground="#87CEEB",
                                   activeforeground="black",
                                   bd=0, highlightthickness=0, command=self.backspace_pressed)
@@ -158,7 +160,8 @@ class GameScreen:
 
     def create_button(self, x1, y1, x2, y2, text, tag, command):
         bg_tag, text_tag, hitbox_tag = f"{tag}_btn_bg", f"{tag}_btn_text", f"{tag}_btn"
-        self.create_rounded_rectangle(x1, y1, x2, y2, radius=25, fill="white", outline="lightblue", width=2, tags=bg_tag)
+        self.create_rounded_rectangle(x1, y1, x2, y2, radius=25, fill="white", outline="lightblue", width=2,
+                                      tags=bg_tag)
         self.canvas.create_text((x1 + x2) // 2, (y1 + y2) // 2, text=text,
                                 font=("Comic Sans MS", 16, "bold"), fill="black", tags=text_tag)
         self.canvas.create_rectangle(x1, y1, x2, y2, fill="", outline="", width=0, tags=hitbox_tag)
@@ -181,7 +184,7 @@ class GameScreen:
             • You have 3 tries to guess the hidden word.
             • Each wrong guess costs a life.
             • After 3 misses, it's game over!
-            
+
             Type your guess, hit Submit, and good luck!
             """)
 
@@ -217,7 +220,3 @@ class GameScreen:
                   x2, y2 - radius, x2, y2, x2 - radius, y2, x1 + radius, y2,
                   x1, y2, x1, y2 - radius, x1, y1 + radius, x1, y1]
         return self.canvas.create_polygon(points, smooth=True, **kwargs)
-
-
-
-
