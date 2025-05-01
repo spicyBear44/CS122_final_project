@@ -40,6 +40,7 @@ class TriviaHangman:
 
         print(f"\nAttempts left: {self.attempts_left}")
 
+
     def update_hidden_answer(self, guess):
         revealed = False
         for i, char in enumerate(self.current_answer):
