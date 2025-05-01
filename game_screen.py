@@ -56,8 +56,7 @@ class GameScreen:
         self.game_elements_visible = False
 
     def create_question_display(self):
-        """Create a frame-based question display"""
-        self.question_frame = tk.Frame(self.canvas, bg="white", bd=2, relief="ridge")
+        self.question_frame = tk.Frame(self.canvas, bg="white", bd=2, highlightbackground="black", highlightthickness=2)
         self.question_label = tk.Label(
             self.question_frame,
             text="",
@@ -85,7 +84,7 @@ class GameScreen:
 
     def create_input_frame(self):
         self.input_var = tk.StringVar()
-        self.input_frame = tk.Frame(self.root, bg="white", bd=5, relief="ridge")
+        self.input_frame = tk.Frame(self.root, highlightbackground="black", highlightthickness=2)
         self.input_display = tk.Label(
             self.input_frame,
             textvariable=self.input_var,
@@ -96,18 +95,35 @@ class GameScreen:
         self.input_display.pack(fill="both", expand=True)
 
     def create_keyboard(self):
-        self.keyboard_frame = tk.Frame(self.root, bg="#381f09")
+        self.keyboard_frame = tk.Frame(self.root, bg="white", highlightbackground="black", highlightthickness=2)
+        self.keyboard_frame.place(x=150, y=560, width=508, height=150)
+
+        # Keyboard layout
         keyboard_layout = [
+            ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
             ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-            ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-            ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '⌫']
+            ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';'],
+            ['Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.','/']
         ]
+
         for i, row in enumerate(keyboard_layout):
             for j, key in enumerate(row):
-                btn = tk.Button(self.keyboard_frame, text=key, font=("Arial", 10, "bold"),
-                                width=2 if key != '⌫' else 3, height=2, bg="#444444", fg="black",
-                                command=lambda k=key: self.key_pressed(k) if k != '⌫' else self.backspace_pressed())
-                btn.grid(row=i, column=j, padx=2, pady=2)
+                # Create each button with a more refined style
+                btn = tk.Button(self.keyboard_frame, text=key, font=("Comic Sans MS", 12, "bold"),
+                                width=4, height=2, relief="flat", bg="#5c5c5c", fg="black", activebackground="#87CEEB",
+                                activeforeground="black", bd=0, highlightthickness=0,
+                                command=lambda k=key: self.key_pressed(k) if k != 'delete' else self.backspace_pressed())
+                btn.grid(row=i, column=j, padx=5, pady=5, sticky="nsew")
+
+
+                self.keyboard_frame.grid_rowconfigure(i, weight=1)
+                self.keyboard_frame.grid_columnconfigure(j, weight=1)
+
+        backspace_btn = tk.Button(self.keyboard_frame, text="delete", font=("Comic Sans MS", 12, "bold"), width=5, height=2,
+                                  relief="flat", bg="white", fg="black", activebackground="#87CEEB",
+                                  activeforeground="black",
+                                  bd=0, highlightthickness=0, command=self.backspace_pressed)
+        backspace_btn.grid(row=3, column=15, padx=5, pady=5, sticky="nsew")
 
     def select_topic(self, topic):
         content = self.game.load_question(topic.lower())
