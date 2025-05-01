@@ -3,3 +3,7 @@ What is the closest planet to the Sun?|Mercury|It's named after the Roman messen
 What is the hardest natural substance on Earth?|Diamond|It's made of carbon
 What is the largest organ in the human body?|Skin|It covers your entire body
 What particle has a positive charge?|Proton|It's found in the nucleus of an atom
+What is the main gas found in the air we breathe?|Nitrogen|It makes up about 78% of Earth's atmosphere
+What planet is known as the Red Planet?|Mars|It has iron oxide (rust) on its surface
+What force keeps us on the ground?|Gravity|Isaac Newton famously studied it with an apple
+What organ pumps blood throughout the body?|Heart|It beats around 100,000 times a day
