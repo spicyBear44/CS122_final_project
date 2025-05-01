@@ -48,12 +48,19 @@ class GameScreen:
         )
         self.submit_btn.place_forget()
 
-    def reset_game_state(self):
+        # Score feature
+        self.score = 0
+        self.create_score_badge()
+
+    def reset_round_state(self):
         self.tries_remaining = 3
-        self.game_started = False
         self.current_question = ""
         self.current_answer = ""
         self.current_hint = ""
+
+    def reset_game_state(self):
+        self.reset_round_state()
+        self.game_started = False
         self.game_elements_visible = False
 
     def create_question_display(self):
@@ -70,13 +77,13 @@ class GameScreen:
         self.question_label.pack(expand=True, fill="both")
 
         self.question_window = self.canvas.create_window(
-            400, 150, window=self.question_frame, width=700, height=100
+        400, 320, window=self.question_frame, width=700, height=100
         )
         self.canvas.itemconfigure(self.question_window, state="hidden")
 
     def create_word_display(self):
         self.word_display = self.canvas.create_text(
-            400, 300,
+            400, 340,
             text="",
             font=("Comic Sans MS", 40, "bold"),
             fill="white",
@@ -89,7 +96,7 @@ class GameScreen:
         self.input_display = tk.Label(
             self.input_frame,
             textvariable=self.input_var,
-            font=("Arial", 24),
+            font=("Comic Sans MS", 24),
             bg="white",
             fg="black"
         )
@@ -97,7 +104,7 @@ class GameScreen:
 
     def create_keyboard(self):
         self.keyboard_frame = tk.Frame(self.root, bg="white", highlightbackground="black", highlightthickness=2)
-        self.keyboard_frame.place(x=150, y=560, width=508, height=150)
+        self.keyboard_frame.place(x=150, y=600, width=508, height=150)
 
         # Keyboard layout
         keyboard_layout = [
@@ -135,8 +142,11 @@ class GameScreen:
 
         self.question_label.config(text=self.current_question)
         self.input_var.set("")
-        self.game_elements_visible = True
-        self.update_game_visibility()
+        if not self.game_elements_visible:
+            self.game_elements_visible = True
+            self.update_game_visibility()
+
+
 
     def update_game_visibility(self):
         state = 'normal' if self.game_elements_visible else 'hidden'
@@ -146,7 +156,7 @@ class GameScreen:
         if self.game_elements_visible:
             self.keyboard_frame.place(x=150, y=560, width=508, height=150)
             self.input_frame.place(x=200, y=490, width=400, height=60)
-            self.submit_btn.place(x=340, y=720, width=120, height=50)
+            self.submit_btn.place(x=340, y=740, width=120, height=50)
         else:
             self.keyboard_frame.place_forget()
             self.input_frame.place_forget()
@@ -157,6 +167,18 @@ class GameScreen:
 
     def create_how_to_play_button(self):
         self.create_button(20, 20, 150, 60, "How To Play", "how_to_play", self.show_instructions)
+
+    def create_score_badge(self):
+        x1,y1,x2,y2 = 670, 20, 750, 60
+        tag = "score"
+        bg_tag, text_tag = f"{tag}_bg", f"{tag}_text"
+        self.create_rounded_rectangle(x1,y1,x2,y2,radius=20,fill="white", outline="lightblue", width=2, tags=bg_tag)
+        self.score_text = self.canvas.create_text((x1 + x2) // 2, (y1 + y2) // 2, text=f"Score: {self.score}",
+                                                  font=("Comic Sans MS", 16, "bold"), fill="black", tags=text_tag)
+
+    def update_score(self, points):
+        self.score += points
+        self.canvas.itemconfig(self.score_text, text=f"Score: {self.score}")
 
     def create_button(self, x1, y1, x2, y2, text, tag, command):
         bg_tag, text_tag, hitbox_tag = f"{tag}_btn_bg", f"{tag}_btn_text", f"{tag}_btn"
@@ -202,7 +224,8 @@ class GameScreen:
         if guess == self.current_answer:
             messagebox.showinfo("Congratulations!", "You guessed correctly!")
             self.canvas.itemconfig(self.word_display, text=self.current_answer)
-            self.reset_game_state()
+            self.update_score(5)
+            self.reset_round_state()
             self.update_game_visibility()
         else:
             self.tries_remaining -= 1
@@ -210,9 +233,12 @@ class GameScreen:
                 messagebox.showinfo("Incorrect", f"{self.tries_remaining} tries remaining.")
                 self.input_var.set("")
             else:
-                messagebox.showinfo("Game Over", f"The word was {self.current_answer}.")
+                messagebox.showinfo("Game Over", f"The word was {self.current_answer}. Your final score is {self.score}")
                 self.canvas.itemconfig(self.word_display, text=self.current_answer)
-                self.game_elements_visible = False
+                self.reset_game_state()
+                self.score = 0
+                self.update_score(0)
+
                 self.update_game_visibility()
 
     def create_rounded_rectangle(self, x1, y1, x2, y2, radius=25, **kwargs):
