@@ -1,6 +1,6 @@
 import tkinter as tk
 import random
-
+from game_screen import GameScreen
 
 class Cloud:
     def __init__(self, canvas, width, height):
@@ -255,7 +255,6 @@ class HangmanGame:
         print("starting game..")
         self.root.destroy()
 
-        from frontend.game_screen import GameScreen
         new_root = tk.Tk()
         game = GameScreen(new_root)
         new_root.mainloop()
