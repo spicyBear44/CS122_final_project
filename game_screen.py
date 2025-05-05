@@ -169,10 +169,10 @@ class GameScreen:
         self.create_button(20, 20, 150, 60, "How To Play", "how_to_play", self.show_instructions)
 
     def create_score_badge(self):
-        x1,y1,x2,y2 = 670, 20, 750, 60
+        x1,y1,x2,y2 = 630, 20, 754, 60
         tag = "score"
         bg_tag, text_tag = f"{tag}_bg", f"{tag}_text"
-        self.create_rounded_rectangle(x1,y1,x2,y2,radius=20,fill="white", outline="lightblue", width=2, tags=bg_tag)
+        self.create_rounded_rectangle(x1,y1,x2,y2,radius=20,fill="white", outline="lightblue", width=4, tags=bg_tag)
         self.score_text = self.canvas.create_text((x1 + x2) // 2, (y1 + y2) // 2, text=f"Score: {self.score}",
                                                   font=("Comic Sans MS", 16, "bold"), fill="black", tags=text_tag)
 
@@ -182,7 +182,7 @@ class GameScreen:
 
     def create_button(self, x1, y1, x2, y2, text, tag, command):
         bg_tag, text_tag, hitbox_tag = f"{tag}_btn_bg", f"{tag}_btn_text", f"{tag}_btn"
-        self.create_rounded_rectangle(x1, y1, x2, y2, radius=25, fill="white", outline="lightblue", width=2,
+        self.create_rounded_rectangle(x1, y1, x2, y2, radius=25, fill="white", outline="lightblue", width=3,
                                       tags=bg_tag)
         self.canvas.create_text((x1 + x2) // 2, (y1 + y2) // 2, text=text,
                                 font=("Comic Sans MS", 16, "bold"), fill="black", tags=text_tag)
